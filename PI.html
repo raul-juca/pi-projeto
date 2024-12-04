@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Llama Chat - Seu Apoio Emocional</title>
+    
+    <!-- Favicon (Logo na aba do navegador) -->
+    <link rel="icon" href="ilama.png" type="image/x-icon">
+    
+    <style>
+        /* Estilo geral */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #D3D3D3; /* Cinza Claro */
+            color: #333;
+            text-align: center;
+        }
+
+        /* Estilo das páginas de apresentação */
+        .page {
+            display: none;
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 20px;
+            transition: opacity 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #363535; /* Verde Pastel */
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        /* Botão Personalizado */
+        button {
+            background-color: #B0E0A8; /* Verde Pastel */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #E6E6FA; /* Lavanda Suave */
+            transform: scale(1.05);
+        }
+
+        /* Estilo do chat */
+        .chat-container {
+            width: 90%;
+            max-width: 600px;
+            height: 90%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #F5F5DC; /* Bege Claro */
+            color: #333;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #B0E0A8; /* Verde Pastel */
+        }
+
+        .chat-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .chat-header .subtitle {
+            font-size: 1rem;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .chat-area {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-message {
+            display: flex;
+            align-items: flex-start;
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .chat-message.user-message {
+            align-self: flex-end;
+            background: #E6E6FA; /* Lavanda Suave */
+            color: #333;
+        }
+
+        .chat-message.bot-message {
+            align-self: flex-start;
+            background: #B0C4DE; /* Azul Claro */
+            color: #333;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 12px;
+        }
+
+        .chat-message .message-content {
+            margin: 0;
+        }
+
+        .chat-message.bot-message img.llama-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 15px;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .chat-input:focus {
+            border-color: #B0E0A8; /* Verde Pastel */
+        }
+
+        .send-button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background: #B0E0A8; /* Verde Pastel */
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .send-button:hover {
+            background: #E6E6FA; /* Lavanda Suave */
+        }
+
+        /* Estilo da página 2 - Time (Grade 3x2) */
+        .team-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+            gap: 20px; /* Ajuste no espaçamento */
+            margin-top: 20px;
+            padding: 10px;
+        }
+
+        .team-member {
+            text-align: center;
+            max-width: 150px; /* Ajuste para garantir que as imagens caibam bem */
+            margin-bottom: 15px;
+        }
+
+        .team-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #B0E0A8;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .team-photo:hover {
+            transform: scale(1.1);
+        }
+
+        h3 {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .member-description {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .team-button {
+            margin-top: 20px;
+            background-color: #B0E0A8;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .team-button:hover {
+            background-color: #E6E6FA;
+            transform: scale(1.05);
+        }
+
+        /* Estilo para telas menores */
+        @media (max-width: 800px) {
+            .team-container {
+                grid-template-columns: repeat(2, 1fr); /* 2 colunas para telas menores */
+            }
+        }
+
+        @media (max-width: 500px) {
+            .team-container {
+                grid-template-columns: 1fr; /* 1 coluna para telas muito pequenas */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Página 1 (Bem-vindo) -->
+    <div id="page1" class="page active">
+        <h1>Bem-vindo(a) ao Llama Chat!</h1>
+        <p>Eu sou o seu chatbot de apoio emocional. Estou aqui para ouvir e ajudar você em qualquer situação.</p>
+        <p>Clique abaixo para continuar e iniciar sua jornada de autodescoberta e bem-estar.</p>
+        <button onclick="nextPage()">Próximo</button>
+    </div>
+
+    <!-- Página 2 - Apresentação do Time -->
+    <div id="page2" class="page">
+        <h1>Nosso Projeto</h1>
+        <p>Conheça o time por trás do projeto e saiba mais sobre nossa missão.</p>
+
+        <div class="team-container">
+            <!-- Membro 1 -->
+            <div class="team-member">
+                <img src="membro1.jpg" alt="Membro 1" class="team-photo">
+                <h3>Nome do Membro 1</h3>
+                <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
+            </div>
+
+            <!-- Membro 2 -->
+            <div class="team-member">
+                <img src="membro2.jpg" alt="Membro 2" class="team-photo">
+                <h3>Nome do Membro 2</h3>
+                <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
+            </div>
+
+            <!-- Membro 3 -->
+            <div class="team-member">
+                <img src="membro3.jpg" alt="Membro 3" class="team-photo">
+                <h3>Nome do Membro 3</h3>
+                <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
+            </div>
+
+            <!-- Membro 4 -->
+            <div class="team-member">
+                <img src="membro4.jpg" alt="Membro 4" class="team-photo">
+                <h3>Nome do Membro 4</h3>
+                <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
+            </div>
+
+            <!-- Membro 5 -->
+            <div class="team-member">
+                <img src="membro5.jpg" alt="Membro 5" class="team-photo">
+                <h3>Nome do Membro 5</h3>
+                <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
+            </div>
+
+            <!-- Membro 6 -->
+            <div class="team-member">
+                <img src="membro6.jpg" alt="Membro 6" class="team-photo">
+                <h3>Nome do Membro 6</h3>
+                <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
+            </div>
+        </div>
+
+        <button class="team-button" onclick="startChat()">Começar o Chat</button>
+    </div>
+
+    <!-- Página de Chat -->
+    <div id="chat" class="chat-container" style="display: none;">
+        <div class="chat-header">
+            <h1>Llama Chat</h1>
+            <p class="subtitle">Estou aqui para ajudar você!</p>
+        </div>
+
+        <div class="chat-area" id="chatArea">
+            <!-- Mensagens do chat serão exibidas aqui -->
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="userInput" placeholder="Digite sua mensagem...">
+            <button class="send-button" onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+
+        function nextPage() {
+            document.getElementById('page' + currentPage).classList.remove('active');
+            currentPage++;
+            document.getElementById('page' + currentPage).classList.add('active');
+        }
+
+        function startChat() {
+            document.getElementById('page2').classList.remove('active');
+            document.getElementById('chat').style.display = 'flex';
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (userInput.trim() !== "") {
+                const chatArea = document.getElementById('chatArea');
+                const userMessage = document.createElement('div');
+                userMessage.classList.add('chat-message', 'user-message');
+                userMessage.textContent = userInput;
+                chatArea.appendChild(userMessage);
+                document.getElementById('userInput').value = "";
+
+                // Gerando a resposta do bot
+                generateBotResponse(userInput, chatArea);
+            }
+        }
+
+        // a resposta do bot
+        function generateBotResponse(message, chatArea) {
+            let botMessage = "";
+
+            if (message.includes("feliz") || message.includes("alegre") || message.includes("bom")) {
+                botMessage = "Fico feliz que você esteja se sentindo bem! 🥳 Continue assim!";
+            } else if (message.includes("triste") || message.includes("mal") || message.includes("deprimido")) {
+                botMessage = "Sinto muito que você esteja se sentindo assim. 😔 Lembre-se que estou aqui para te ouvir.";
+            } else {
+                botMessage = "Estou aqui para ouvir você, me fale o que está no seu coração.";
+            }
+
+            // Resposta do bot
+            const botResponse = document.createElement('div');
+            botResponse.classList.add('chat-message', 'bot-message');
+            botResponse.innerHTML = `<img src="llhamapi.png" class="llama-avatar"> <span class="message-content">${botMessage}</span>`;
+            chatArea.appendChild(botResponse);
+            chatArea.scrollTop = chatArea.scrollHeight; // Rolagem para a última mensagem
+        }
+    </script>
+
+</body>
+</html>
