@@ -134,5 +134,27 @@
         // Simula o envio da mensagem e mostra o feedback após um certo tempo
         setTimeout(showFeedback, 5000); // O feedback aparece após 5 segundos (simulação)
     </script>
+
+    <!-- Script para rolar automaticamente -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const chatArea = document.querySelector(".chat-area");
+            const sendButton = document.querySelector(".send-button");
+            const chatInput = document.querySelector(".chat-input");
+
+            sendButton.addEventListener("click", function () {
+                const userMessage = chatInput.value;
+                if (userMessage.trim() !== "") {
+                    const messageDiv = document.createElement("div");
+                    messageDiv.className = "chat-message user-message";
+                    messageDiv.innerHTML = `<div class="message-content">${userMessage}</div>`;
+                    chatArea.appendChild(messageDiv);
+
+                    chatArea.scrollTop = chatArea.scrollHeight; // Rolagem automática
+                    chatInput.value = "";
+                }
+            });
+        });
+    </script>
 </body>
 </html>
