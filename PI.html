@@ -293,27 +293,46 @@
                 <h3>Nome do Membro 3</h3>
                 <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
             </div>
+
+            <!-- Membro 4 -->
+            <div class="team-member">
+                <img src="membro4.jpg" alt="Membro 4" class="team-photo">
+                <h3>Nome do Membro 4</h3>
+                <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
+            </div>
+
+            <!-- Membro 5 -->
+            <div class="team-member">
+                <img src="membro5.jpg" alt="Membro 5" class="team-photo">
+                <h3>Nome do Membro 5</h3>
+                <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
+            </div>
+
+            <!-- Membro 6 -->
+            <div class="team-member">
+                <img src="membro6.jpg" alt="Membro 6" class="team-photo">
+                <h3>Nome do Membro 6</h3>
+                <p class="member-description">Breve descrição sobre o membro e sua contribuição para o projeto.</p>
+            </div>
         </div>
 
-        <button onclick="startChat()">Iniciar Chat</button>
+        <button class="team-button" onclick="startChat()">Começar o Chat</button>
     </div>
 
-    <!-- Chatbot -->
-    <div id="chatbox" class="page">
-        <div class="chat-container">
-            <div class="chat-header">
-                <h1>Chat com Llama</h1>
-                <p class="subtitle">Eu estou aqui para ouvir e ajudar você.</p>
-            </div>
+    <!-- Página de Chat -->
+    <div id="chat" class="chat-container" style="display: none;">
+        <div class="chat-header">
+            <h1>Llama Chat</h1>
+            <p class="subtitle">Estou aqui para ajudar você!</p>
+        </div>
 
-            <div id="chat-area" class="chat-area">
-                <!-- Mensagens aparecerão aqui -->
-            </div>
+        <div class="chat-area" id="chatArea">
+            <!-- Mensagens do chat serão exibidas aqui -->
+        </div>
 
-            <div class="chat-input-area">
-                <input id="user-input" class="chat-input" type="text" placeholder="Digite sua mensagem...">
-                <button id="send-btn" class="send-button" onclick="sendMessage()">Enviar</button>
-            </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="userInput" placeholder="Digite sua mensagem...">
+            <button class="send-button" onclick="sendMessage()">Enviar</button>
         </div>
     </div>
 
@@ -321,61 +340,49 @@
         let currentPage = 1;
 
         function nextPage() {
+            document.getElementById('page' + currentPage).classList.remove('active');
             currentPage++;
-            updatePage();
+            document.getElementById('page' + currentPage).classList.add('active');
         }
 
         function startChat() {
-            currentPage = 3;
-            updatePage();
+            document.getElementById('page2').classList.remove('active');
+            document.getElementById('chat').style.display = 'flex';
         }
 
-        function updatePage() {
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-
-            if (currentPage === 1) {
-                document.getElementById('page1').classList.add('active');
-            } else if (currentPage === 2) {
-                document.getElementById('page2').classList.add('active');
-            } else if (currentPage === 3) {
-                document.getElementById('chatbox').classList.add('active');
-            }
-        }
-
-        // Função para enviar mensagem
         function sendMessage() {
-            const userInput = document.getElementById('user-input').value;
-            if (!userInput.trim()) return;
+            const userInput = document.getElementById('userInput').value;
+            if (userInput.trim() !== "") {
+                const chatArea = document.getElementById('chatArea');
+                const userMessage = document.createElement('div');
+                userMessage.classList.add('chat-message', 'user-message');
+                userMessage.textContent = userInput;
+                chatArea.appendChild(userMessage);
+                document.getElementById('userInput').value = "";
 
-            appendMessage(userInput, 'user-message');
-            document.getElementById('user-input').value = '';
-
-            setTimeout(() => {
-                appendMessage("Estou aqui para ajudar. Como você está se sentindo hoje?", 'bot-message');
-            }, 1000);
+                // Gerando a resposta do bot
+                generateBotResponse(userInput, chatArea);
+            }
         }
 
-        function appendMessage(text, sender) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('chat-message', sender);
-            const messageContent = document.createElement('p');
-            messageContent.classList.add('message-content');
-            messageContent.textContent = text;
-            messageElement.appendChild(messageContent);
-            
-            // Adicionando avatar de Llama para as mensagens do bot
-            if (sender === 'bot-message') {
-                const llamaAvatar = document.createElement('img');
-                llamaAvatar.src = 'llama-avatar.png';
-                llamaAvatar.alt = 'Avatar do Llama';
-                llamaAvatar.classList.add('llama-avatar');
-                messageElement.insertBefore(llamaAvatar, messageContent);
+        // a resposta do bot
+        function generateBotResponse(message, chatArea) {
+            let botMessage = "";
+
+            if (message.includes("feliz") || message.includes("alegre") || message.includes("bom")) {
+                botMessage = "Fico feliz que você esteja se sentindo bem! 🥳 Continue assim!";
+            } else if (message.includes("triste") || message.includes("mal") || message.includes("deprimido")) {
+                botMessage = "Sinto muito que você esteja se sentindo assim. 😔 Lembre-se que estou aqui para te ouvir.";
+            } else {
+                botMessage = "Estou aqui para ouvir você, me fale o que está no seu coração.";
             }
 
-            document.getElementById('chat-area').appendChild(messageElement);
-            document.getElementById('chat-area').scrollTop = document.getElementById('chat-area').scrollHeight;
+            // Resposta do bot
+            const botResponse = document.createElement('div');
+            botResponse.classList.add('chat-message', 'bot-message');
+            botResponse.innerHTML = `<img src="llhamapi.png" class="llama-avatar"> <span class="message-content">${botMessage}</span>`;
+            chatArea.appendChild(botResponse);
+            chatArea.scrollTop = chatArea.scrollHeight; // Rolagem para a última mensagem
         }
     </script>
 
